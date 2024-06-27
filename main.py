@@ -26,7 +26,7 @@ import pickle
 
 # we are loading the model using pickle
 model = pickle.load(open('model.pkl', 'rb'))
-
+predictions= pd.read_csv('predictions.csv')
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
