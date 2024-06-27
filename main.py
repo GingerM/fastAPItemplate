@@ -26,6 +26,7 @@ import pickle
 
 # we are loading the model using pickle
 model = pickle.load(open('model.pkl', 'rb'))
+#loading the VAR forecasts for secondary variables
 predictions= pd.read_csv('predictions.csv')
 
 @app.get("/", response_class=HTMLResponse)
@@ -34,9 +35,15 @@ def index(request: Request):
 
 
 @app.post('/predict', response_class=HTMLResponse)
-def predict(request: Request, category: int = Form(), sellable_online: int = Form(), other_colors: int = Form(), depth: int = Form(),
-            height: int = Form(), width: int = Form()):
-    return templates.TemplateResponse('index.html',{"request": request,"prediction_text": str(model.predict([[category, sellable_online,other_colors, depth, height,width]])[0])})
+def predict(request: Request, Category: str = Form(), Year: int = Form()):
+    print(predictions.iloc[Year])
+    print(Category)
+    picked_model= model
+    if Category == "vegetable":
+        picked_model= model
+    elif Category == "cereal":
+        picked_model = model
+    return templates.TemplateResponse('index.html',{"request": request,"prediction_text": str(picked_model.predict(predictions.iloc[Year])[0])})
 
 
 @app.post('/make_predictions')
